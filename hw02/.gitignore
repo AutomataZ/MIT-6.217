@@ -1,20 +1,4 @@
-# HW02 build and profiling output
+# HW02 generated executables
 /homework/sort
 /recitation/isort
 /recitation/sum
-*.o
-*.gcda
-*.gcno
-*.gcov
-*.profraw
-*.profdata
-perf.data
-perf.data.*
-cachegrind.out.*
-callgrind.out.*
-core
-core.[0-9]*
-__pycache__/
-*.pyc
-.DS_Store
-__MACOSX/

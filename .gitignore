@@ -6,13 +6,6 @@
 a.out
 .buildmode
 
-# HW01 生成的可执行文件
-/hw01/matrix-multiply/matrix_multiply
-/hw01/c-primer/sizes
-/hw01/c-primer/pointer
-/hw01/c-primer/swap
-/hw01/c-primer/preprocess
-
 # 覆盖率与性能分析的原始输出
 *.gcda
 *.gcno
