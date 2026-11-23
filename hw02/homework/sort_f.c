@@ -23,7 +23,89 @@
 
 #include "./util.h"
 
+#define INSERTION_THRESHOLD 64
+
+void isort(data_t* begin, data_t* end);
+
+// Function prototypes
+static void sort_f_recursive(data_t* A, int p, int r, data_t* scratch);
+static inline void merge_f(data_t* A, int p, int q, int r, data_t* scratch);
+static inline void copy_f(data_t* source, data_t* dest, int n);
+
 void sort_f(data_t* A, int p, int r) {
-  printf("Unimplemented!\n");
+  assert(A);
+
+  if (p >= r) {
+    return;
+  }
+
+  int n = r + 1 - p;
+  data_t* scratch = NULL;
+  mem_alloc(&scratch, n - n / 2);
+  if (scratch == NULL) {
+    return;
+  }
+  sort_f_recursive(A, p, r, scratch);
+
+  mem_free(&scratch);
 }
 
+static void sort_f_recursive(data_t* A, int p, int r, data_t* scratch) {
+  int n = r + 1 - p;
+  if (n <= INSERTION_THRESHOLD) {
+    isort(A + p, A + r);
+    return;
+  }
+
+  int q = p + (r - p) / 2;
+  sort_f_recursive(A, p, q, scratch);
+  sort_f_recursive(A, q + 1, r, scratch);
+  merge_f(A, p, q, r, scratch);
+}
+
+static inline void merge_f(data_t* A, int p, int q, int r, data_t* scratch) {
+  assert(A);
+  assert(p <= q);
+  assert((q + 1) <= r);
+
+  int nleft = q - p + 1;
+
+  data_t* left = scratch;
+
+  copy_f(A + p, left, nleft);
+
+  data_t* lptr = left;
+  data_t* lend = left + nleft;
+  data_t* rptr = A + q + 1;
+  data_t* rend = A + r + 1;
+  data_t* out = A + p;
+
+  while (lptr != lend && rptr != rend) {
+    if (*lptr < *rptr) {
+      *out = *lptr;
+      lptr++;
+    }
+    else {
+      *out = *rptr;
+      rptr++;
+    }
+    out++;
+  }
+  // 右边先用完要把左边写回
+  while(lptr != lend) {
+    *out = *lptr;
+    out++;
+    lptr++;
+  }
+}
+
+static inline void copy_f(data_t* source, data_t* dest, int n) {
+  assert(dest);
+  assert(source);
+
+  for (int remaining = n; remaining > 0; remaining--) {
+    *dest = *source;
+    dest++;
+    source++;
+  }
+}

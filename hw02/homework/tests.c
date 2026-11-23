@@ -159,9 +159,6 @@ static void test_correctness(int printFlag, int N, int R,
   int success = 1;
 
   float* sum_time = (float*) alloca(numFunc * sizeof(float));
-  for (int i = 0; i < numFunc; i++) {
-    sum_time[i] = 0;
-  }
 
   // allocate memory
   data = (data_t*) malloc(N * sizeof(data_t));
@@ -174,15 +171,15 @@ static void test_correctness(int printFlag, int N, int R,
     exit(-1);
   }
 
-  // Initialize elapsed time counters to 0.
-  for (int k = 0; k < numFunc; k++) {
-    sum_time[k] = 0;
-  }
-
   // repeat for each array kind
   for (int gen = 0;
        gen < sizeof(dataGen) / sizeof(dataGen[0]);
        gen++) {
+    // Reset counters so each input kind is timed independently.
+    for (int k = 0; k < numFunc; k++) {
+      sum_time[k] = 0;
+    }
+
     printf("Generating %s array of %d elements\n",
            dataGen[gen].name, N);
     // repeat for each trial
